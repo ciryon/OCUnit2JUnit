@@ -79,6 +79,10 @@ class ReportParser
     
         when /failed with exit code (\d+)/
           @exit_code = $1.to_i
+          
+        when
+          /** BUILD FAILED **/
+          @exit_code = -1;
       end
     end
   end
