@@ -1,6 +1,7 @@
 Introduction
 ======================
 
+This fork of the [OCUnit2JUnit script](https://github.com/ciryon/OCUnit2JUnit) allow to read the output from [Kiwi BDD Testing Framework](https://github.com/allending/Kiwi) and create proper readable output for your CI environment.
 OCUnit2JUnit is a script that converts output from OCUnit to the format used by JUnit. The main purpose is to be able to parse output from Objective-C (OCUnit) test cases on a Java-based build server, such as [Hudson](http://www.hudson-co.org).
 
 Usage

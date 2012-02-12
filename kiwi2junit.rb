@@ -1,4 +1,4 @@
-#!/usr/bin/ruby
+#!/usr/bin/env ruby
 #
 # ocunit2junit.rb was written by Christian Hedin <christian.hedin@jayway.com>
 # Version: 0.1 - 30/01 2010
@@ -61,21 +61,21 @@ class ReportParser
           test_case = $1
 
         when /Test Case '-\[\S+\s+(\S+)\]' passed \((.*) seconds\)/
-          test_case = $1
+          test_case = create_kiwi_method_name($1, @last_row)
           test_case_duration = $2.to_f
           handle_test_passed(test_case,test_case_duration)
 
         when /(.*): error: -\[(\S+) (\S+)\] : (.*)/
           error_location = $1
           test_suite = $2
-          test_case = $3
           error_message = $4
+	  test_case = create_kiwi_method_name("example", piped_row)
           handle_test_error(test_suite,test_case,error_message,error_location)
     
         when /Test Case '-\[\S+ (\S+)\]' failed \((\S+) seconds\)/
-          test_case = $1
+          test_case = create_kiwi_method_name($1, @last_row)
           test_case_duration = $2.to_f
-          handle_test_failed(test_case,test_case_duration)
+	  handle_test_failed(test_case,test_case_duration)
     
         when /failed with exit code (\d+)/
           @exit_code = $1.to_i
@@ -84,6 +84,7 @@ class ReportParser
           /BUILD FAILED/
           @exit_code = -1;
       end
+     @last_row = piped_row 
     end
   end
   
@@ -150,11 +151,16 @@ class ReportParser
     @total_failed_test_cases +=1
     @tests_results[test_case] = test_case_duration
   end
+
+  def create_kiwi_method_name(test_case,full_row)
+    test_case_name = full_row.scan(/\'([^\']+)\'/)
+    test_case.sub("example", test_case_name[0][0])
+  end
  
 end
 
 #Main
-#piped_input = File.open("tests_fail.txt") # for debugging this script
+#piped_input = File.open("tests.txt") # for debugging this script
 piped_input = ARGF.read
 
 report = ReportParser.new(piped_input)
