@@ -165,12 +165,8 @@ class ReportParser
   end
 
   def get_test_case_name(test_case, description)
-    if SUPPORT_KIWI && test_case == "example"
-      unless description.nil?
-        description
-      else
-        "example"
-      end
+    if SUPPORT_KIWI and test_case == "example" and !description.nil?
+      description
     else
       test_case
     end
