@@ -26,7 +26,7 @@ TEST_REPORTS_FOLDER = "test-reports"
 ################################################################
 
 require 'time'
-require 'FileUtils'
+require 'fileutils'
 require 'socket'
 
 class ReportParser
