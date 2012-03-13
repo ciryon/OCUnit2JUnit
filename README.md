@@ -1,7 +1,7 @@
 Introduction
 ======================
 
-OCUnit2JUnit is a script that converts output from OCUnit to the format used by JUnit. The main purpose is to be able to parse output from Objective-C (OCUnit) test cases on a Java-based build server, such as [Hudson](http://www.hudson-co.org).
+OCUnit2JUnit is a script that converts output from OCUnit to the format used by JUnit. The main purpose is to be able to parse output from Objective-C (OCUnit) test cases on a Java-based build server, such as [Jenkins](http://jenkins-ci.org/).
 
 Usage
 ======================
