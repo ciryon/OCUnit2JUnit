@@ -1,0 +1,5 @@
+# OS X
+.DS_Store
+
+# OCUnit2JUnit output
+test-reports
