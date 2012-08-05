@@ -46,7 +46,7 @@ class ReportParser
   private
   
   def parse_input
-    @piped_input.each do |piped_row|
+    @piped_input.each_line do |piped_row|
       puts piped_row
       
       description_results = piped_row.scan(/\s\'(.+)\'\s/)
