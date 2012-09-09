@@ -6,6 +6,7 @@ OCUnit2JUnit is a script that converts output from OCUnit to the format used by 
 Usage
 ======================
 
+* Install with 'gem install ocunit2junit' (possibly prepended by 'sudo' if your Ruby installation requires that)
 * Put the script somewhere where your build server can read it
 * Use this shell command to build: 
 

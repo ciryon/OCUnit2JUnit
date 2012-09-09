@@ -1,4 +1,4 @@
-#!/usr/bin/ruby
+#!/usr/bin/env ruby
 #
 # ocunit2junit.rb was written by Christian Hedin <christian.hedin@jayway.com>
 # Version: 0.1 - 30/01 2010
