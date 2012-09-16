@@ -10,7 +10,7 @@ Usage
 * Put the script somewhere where your build server can read it
 * Use this shell command to build: 
 
-	`xcodebuild -t <target> -sdk <sdk> -configuration <config> | /path/to/ocunit2junit.rb`
+	`xcodebuild -t <target> -sdk <sdk> -configuration <config> 2>&1 | /path/to/ocunit2junit.rb`
 
 * The output is, by default, in the `test-reports` folder
 * If your build fails, this script will pass the error code
