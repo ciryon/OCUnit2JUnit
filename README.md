@@ -3,11 +3,17 @@ Introduction
 
 OCUnit2JUnit is a script that converts output from OCUnit to the format used by JUnit. The main purpose is to be able to parse output from Objective-C (OCUnit) test cases on a Java-based build server, such as [Jenkins](http://jenkins-ci.org/).
 
-Usage
+
+Installation
 ======================
 
 * Install with 'gem install ocunit2junit' (possibly prepended by 'sudo' if your Ruby installation requires that)
-* Put the script somewhere where your build server can read it
+
+Usage
+======================
+
+
+* Make sure your build server can access the xcodebuild executable
 * Use this shell command to build: 
 
 	`xcodebuild -t <target> -sdk <sdk> -configuration <config> 2>&1 | /path/to/ocunit2junit.rb`
