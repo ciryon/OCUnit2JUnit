@@ -1,14 +1,33 @@
-What is different in this fork?
+Introduction
 ======================
 
-This fork of the [OCUnit2JUnit script](https://github.com/ciryon/OCUnit2JUnit) allows to read output from [Kiwi BDD Testing Framework](https://github.com/allending/Kiwi) and creates proper readable names for your CI environment. With the original version, all your specs would be called 'example', while this version uses your descriptions as method names.
+OCUnit2JUnit is a script that converts output from OCUnit to the format used by JUnit. The main purpose is to be able to parse output from Objective-C (OCUnit) test cases on a Java-based build server, such as [Jenkins](http://jenkins-ci.org/).
 
-![Example output](https://github.com/MattesGroeger/OCUnit2JUnit/raw/master/example.png "Example output")
+
+Installation
+======================
+
+* Install with 'gem install ocunit2junit' (possibly prepended by 'sudo' if your Ruby installation requires that)
+
+Usage
+======================
+
+
+* Make sure your build server can access the xcodebuild executable
+* Use this shell command to build: 
+
+	`xcodebuild -t <target> -sdk <sdk> -configuration <config> 2>&1 | /path/to/ocunit2junit.rb`
+
+* The output is, by default, in the `test-reports` folder
+* If your build fails, this script will pass the error code
+* All output is also passed along, so you will still see everything in your build log
+
 
 More information
 ======================
 
-For more information on this script and how to use it, read on in [the original project](https://github.com/ciryon/OCUnit2JUnit).
+Can be found in [this blog post](http://blog.jayway.com/2010/01/31/continuos-integration-for-xcode-projects/).
+
 
 Licence
 ======================

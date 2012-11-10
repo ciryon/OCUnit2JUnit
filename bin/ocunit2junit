@@ -27,7 +27,7 @@ SUPPORT_KIWI = true
 ################################################################
 
 require 'time'
-require 'FileUtils'
+require 'fileutils'
 require 'socket'
 
 class ReportParser
@@ -175,8 +175,8 @@ class ReportParser
 end
 
 #Main
-#piped_input = File.open("tests.txt") # for debugging this script
-piped_input = ARGF.read
+#piped_input = File.open("tests_fail.txt") # for debugging this script
+piped_input = ARGF.readlines
 
 report = ReportParser.new(piped_input)
 
