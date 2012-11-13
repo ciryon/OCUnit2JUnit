@@ -20,6 +20,7 @@
 #
 # Where to put the XML-files from your unit tests
 TEST_REPORTS_FOLDER = "test-reports"
+SUPPORT_KIWI = true
 #
 #
 # Don't edit below this line
@@ -47,11 +48,18 @@ class ReportParser
   def parse_input
     @piped_input.each do |piped_row|
       puts piped_row
+      
+      description_results = piped_row.scan(/\s\'(.+)\'\s/)
+      if description_results and description_results[0] and description_results[0]
+        description = description_results[0][0]
+      end
+      
       case piped_row
         
         when /Test Suite '(\S+)'.*started at\s+(.*)/
           t = Time.parse($2.to_s)
           handle_start_test_suite(t)
+          @last_description = nil
 
         when /Test Suite '(\S+)'.*finished at\s+(.*)./
           t = Time.parse($2.to_s)
@@ -59,30 +67,35 @@ class ReportParser
 
         when /Test Case '-\[\S+\s+(\S+)\]' started./
           test_case = $1
+          @last_description = nil
 
         when /Test Case '-\[\S+\s+(\S+)\]' passed \((.*) seconds\)/
-          test_case = $1
+          test_case = get_test_case_name($1, @last_description)
           test_case_duration = $2.to_f
           handle_test_passed(test_case,test_case_duration)
 
         when /(.*): error: -\[(\S+) (\S+)\] : (.*)/
           error_location = $1
           test_suite = $2
-          test_case = $3
           error_message = $4
-          handle_test_error(test_suite,test_case,error_message,error_location)
-    
+	        test_case = get_test_case_name($3, description)
+	        handle_test_error(test_suite,test_case,error_message,error_location)
+	        
         when /Test Case '-\[\S+ (\S+)\]' failed \((\S+) seconds\)/
-          test_case = $1
+          test_case = get_test_case_name($1, @last_description)
           test_case_duration = $2.to_f
           handle_test_failed(test_case,test_case_duration)
-    
+	        
         when /failed with exit code (\d+)/
           @exit_code = $1.to_i
           
         when
           /BUILD FAILED/
           @exit_code = -1;
+      end
+      
+      unless description.nil?
+        @last_description = description
       end
     end
   end
@@ -149,6 +162,14 @@ class ReportParser
   def handle_test_failed(test_case,test_case_duration) 
     @total_failed_test_cases +=1
     @tests_results[test_case] = test_case_duration
+  end
+
+  def get_test_case_name(test_case, description)
+    if SUPPORT_KIWI and test_case == "example" and !description.nil?
+      description
+    else
+      test_case
+    end
   end
  
 end
