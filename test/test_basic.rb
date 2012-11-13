@@ -56,7 +56,7 @@ class BasicTests < Test::Unit::TestCase
 
     def self.pipe_xcodebuild_to_ocunit2junit
       abs_file_path = File.expand_path(File.dirname(__FILE__))
-      ocunit2junit = abs_file_path + '/../ocunit2junit.rb'
+      ocunit2junit = abs_file_path + '/../bin/ocunit2junit'
       xcodeproj = abs_file_path + '/TestProject/TestProject.xcodeproj'
       `pushd #{TEST_PATH}; xcodebuild -project #{xcodeproj} -scheme TestProject test | #{ocunit2junit}; popd`
     end
