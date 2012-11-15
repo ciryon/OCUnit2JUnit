@@ -45,3 +45,11 @@ Licence
 ======================
 
 Free to use however you want.
+
+
+Author
+======================
+
+OCUnit2JUnit was created by Christian Hedin.
+Twitter: @ciryon
+Google Plus: https://plus.google.com/103286810504956788514/
