@@ -16,7 +16,7 @@ Usage
 * Make sure your build server can access the xcodebuild executable
 * Use this shell command to build: 
 
-	`xcodebuild -t <target> -sdk <sdk> -configuration <config> 2>&1 | /path/to/ocunit2junit.rb`
+	`xcodebuild -target <target> -sdk <sdk> -configuration <config> 2>&1 | ocunit2junit`
 
 * The output is, by default, in the `test-reports` folder
 * If your build fails, this script will pass the error code
