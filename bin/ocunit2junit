@@ -33,29 +33,30 @@ require 'socket'
 class ReportParser
 
   attr_reader :exit_code
-  
-  def initialize(piped_input)
+  attr_reader :test_reports_folder
+
+  def initialize(piped_input, folder = TEST_REPORTS_FOLDER)
     @piped_input = piped_input
     @exit_code = 0
-    
-    FileUtils.rm_rf(TEST_REPORTS_FOLDER)
-    FileUtils.mkdir(TEST_REPORTS_FOLDER)
+    @test_reports_folder = folder || TEST_REPORTS_FOLDER
+    FileUtils.rm_rf(@test_reports_folder)
+    FileUtils.mkdir_p(@test_reports_folder)
     parse_input
   end
 
   private
-  
+
   def parse_input
     @piped_input.each do |piped_row|
       puts piped_row
-      
+
       description_results = piped_row.scan(/\s\'(.+)\'\s/)
       if description_results and description_results[0] and description_results[0]
         description = description_results[0][0]
       end
-      
+
       case piped_row
-        
+
         when /Test Suite '(\S+)'.*started at\s+(.*)/
           t = Time.parse($2.to_s)
           handle_start_test_suite(t)
@@ -78,28 +79,28 @@ class ReportParser
           error_location = $1
           test_suite = $2
           error_message = $4
-	        test_case = get_test_case_name($3, description)
-	        handle_test_error(test_suite,test_case,error_message,error_location)
-	        
+            test_case = get_test_case_name($3, description)
+            handle_test_error(test_suite,test_case,error_message,error_location)
+
         when /Test Case '-\[\S+ (\S+)\]' failed \((\S+) seconds\)/
           test_case = get_test_case_name($1, @last_description)
           test_case_duration = $2.to_f
           handle_test_failed(test_case,test_case_duration)
-	        
+
         when /failed with exit code (\d+)/
           @exit_code = $1.to_i
-          
+
         when
           /BUILD FAILED/
           @exit_code = -1;
       end
-      
+
       unless description.nil?
         @last_description = description
       end
     end
   end
-  
+
   def handle_start_test_suite(start_time)
     @total_failed_test_cases = 0
     @total_passed_test_cases = 0
@@ -111,7 +112,7 @@ class ReportParser
 
   def handle_end_test_suite(test_name,end_time)
     unless @ended_current_test_suite
-      current_file = File.open("#{TEST_REPORTS_FOLDER}/TEST-#{test_name}.xml", 'w')
+      current_file = File.open("#{@test_reports_folder}/TEST-#{test_name}.xml", 'w')
       host_name = string_to_xml Socket.gethostname
       test_name = string_to_xml test_name
       test_duration = (end_time - @cur_start_time).to_s
@@ -129,7 +130,6 @@ class ReportParser
           puts @errors[test_case][0]
           puts "tests_errors[1]"
           puts @errors[test_case][1]
-          
           message = string_to_xml @errors[test_case][0].to_s
           location = string_to_xml @errors[test_case][1].to_s
           current_file << ">\n"
@@ -148,7 +148,7 @@ class ReportParser
   def string_to_xml(s)
     s.gsub(/&/, '&amp;').gsub(/'/, '&quot;').gsub(/</, '&lt;')
   end
-  
+
   def handle_test_passed(test_case,test_case_duration)
     @total_passed_test_cases += 1
     @tests_results[test_case] = test_case_duration
@@ -171,13 +171,16 @@ class ReportParser
       test_case
     end
   end
- 
+
 end
 
 #Main
 #piped_input = File.open("tests_fail.txt") # for debugging this script
+if ARGV.count == 1
+  test_folder = ARGV.shift
+end
 piped_input = ARGF.readlines
 
-report = ReportParser.new(piped_input)
+report = ReportParser.new(piped_input, test_folder)
 
 exit report.exit_code
