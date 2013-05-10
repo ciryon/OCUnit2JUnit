@@ -47,6 +47,8 @@ class ReportParser
   
   def parse_input
     @piped_input.each do |piped_row|
+      piped_row.encode!('UTF-16', 'UTF-8', :invalid => :replace, :replace => '')
+      piped_row.encode!('UTF-8', 'UTF-16')
       puts piped_row
       
       description_results = piped_row.scan(/\s\'(.+)\'\s/)
