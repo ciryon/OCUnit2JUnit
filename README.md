@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/ciryon/OCUnit2JUnit.png)](https://travis-ci.org/ciryon/OCUnit2JUnit)
+
 Introduction
 ======================
 
