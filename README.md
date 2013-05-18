@@ -40,7 +40,8 @@ However, if you don't want this, you can disable it in the header:
 More information
 ======================
 
-Can be found in [this blog post](http://blog.jayway.com/2010/01/31/continuos-integration-for-xcode-projects/).
+* If you're having issues with character encoding, please upgrade to Ruby 1.9.2 or later.
+* More info can be found in [this blog post](http://blog.jayway.com/2010/01/31/continuos-integration-for-xcode-projects/).
 
 
 Licence
