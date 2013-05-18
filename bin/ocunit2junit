@@ -19,7 +19,7 @@
 #
 #
 # Where to put the XML-files from your unit tests
-TEST_REPORTS_FOLDER = "test-reports"
+TEST_REPORTS_FOLDER = ENV['TEST_REPORTS_FOLDER'] || "test-reports"
 SUPPORT_KIWI = true
 #
 #
