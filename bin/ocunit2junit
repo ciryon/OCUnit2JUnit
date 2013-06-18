@@ -39,7 +39,7 @@ class ReportParser
     @exit_code = 0
     
     FileUtils.rm_rf(TEST_REPORTS_FOLDER)
-    FileUtils.mkdir(TEST_REPORTS_FOLDER)
+    FileUtils.mkdir_p(TEST_REPORTS_FOLDER)
     parse_input
   end
 
