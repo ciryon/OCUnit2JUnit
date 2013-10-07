@@ -170,8 +170,18 @@ class ReportParser
   end
 
   def get_test_case_name(test_case, description)
+    # Kiwi 1.x
     if SUPPORT_KIWI and test_case == "example" and !description.nil?
       description
+    # Kiwi 2.x
+    elsif SUPPORT_KIWI && test_case =~ /(.+_)+(Should.+)(_.+)*/
+      test_case.gsub(/([A-Z])([A-Z][a-z]+)/, ' \1 \2')
+               .gsub(/([A-Z][a-z]+)/, ' \1')
+               .gsub(/([A-Z][A-Z]+)/, ' \1')
+               .gsub(/([^A-Za-z ]+)/, ' \1')
+               .gsub(/\s+/, ' ')
+               .split(" _ ")[1..-1].join(", ")
+               .downcase.capitalize
     else
       test_case
     end
