@@ -46,7 +46,13 @@ class ReportParser
   private
   
   def parse_input
-    @piped_input.each do |piped_row|
+    if @piped_input.respond_to?(:each)
+        line_enumerator = @piped_input.each
+    elsif @piped_input.respond_to?(:each_line)
+        line_enumerator = @piped_input.each_line
+    end
+
+    line_enumerator.each do |piped_row|
       if piped_row.respond_to?("encode!")
         temporary_encoding = (RUBY_VERSION == '1.9.2') ? 'UTF-8' : 'UTF-16'
         piped_row.encode!(temporary_encoding, 'UTF-8', :invalid => :replace, :replace => '')
