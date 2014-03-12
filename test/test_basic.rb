@@ -23,6 +23,13 @@ class BasicTests < Test::Unit::TestCase
            "The TestProject should be parsed in a TEST-TestProjectTests.xml report"
   end
 
+  def test_output_log_to_reports_dir
+    Helper.pipe_xcodebuild_log_to_ocunit2junit
+
+    assert File.directory?(Helper.test_reports_output_path),
+           "Test reports driven from a log should be written to a 'test-reports' directory"
+  end
+
   def test_report_content
     Helper.pipe_xcodebuild_to_ocunit2junit
     file = File.new Helper.test_reports_output_path + '/TEST-TestProjectTests.xml'
@@ -59,6 +66,15 @@ class BasicTests < Test::Unit::TestCase
       ocunit2junit = abs_file_path + '/../bin/ocunit2junit'
       xcodeproj = abs_file_path + '/TestProject/TestProject.xcodeproj'
       `pushd #{TEST_PATH}; xcodebuild -project #{xcodeproj} -scheme TestProject test | #{ocunit2junit}; popd`
+    end
+
+    def self.pipe_xcodebuild_log_to_ocunit2junit
+      abs_file_path = File.expand_path(File.dirname(__FILE__))
+      ocunit2junit = abs_file_path + '/../bin/ocunit2junit'
+      xcodeproj = abs_file_path + '/TestProject/TestProject.xcodeproj'
+      outputFile = abs_file_path + 'output.log'
+      `pushd #{TEST_PATH}; xcodebuild -project #{xcodeproj} -scheme TestProject test > #{outputFile}; cat #{outputFile} | #{ocunit2junit}; popd`
+      `rm #{outputFile}`
     end
 
   end
