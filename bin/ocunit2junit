@@ -19,8 +19,8 @@
 #
 #
 # Where to put the XML-files from your unit tests
-TEST_REPORTS_FOLDER = ENV['TEST_REPORTS_FOLDER'] || "test-reports"
-SUPPORT_KIWI = true
+TEST_REPORTS_FOLDER = ENV.has_key?('TEST_REPORTS_FOLDER') ? ENV['TEST_REPORTS_FOLDER'] : "test-reports"
+SUPPORT_KIWI = ENV.has_key?('SUPPORT_KIWI') ? ENV['SUPPORT_KIWI'] : true
 #
 #
 # Don't edit below this line
