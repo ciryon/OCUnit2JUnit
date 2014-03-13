@@ -61,7 +61,7 @@ class ReportParser
       puts piped_row
       
       description_results = piped_row.scan(/\s\'(.+)\'\s/)
-      if description_results and description_results[0] and description_results[0]
+      if description_results && description_results[0] && description_results[0]
         description = description_results[0][0]
       end
       
@@ -105,7 +105,7 @@ class ReportParser
           @exit_code = -1;
       end
       
-      unless description.nil?
+      if description
         @last_description = description
       end
     end
@@ -177,7 +177,7 @@ class ReportParser
 
   def get_test_case_name(test_case, description)
     # Kiwi 1.x
-    if SUPPORT_KIWI and test_case == "example" and !description.nil?
+    if SUPPORT_KIWI && test_case == "example" && description
       description
     # Kiwi 2.x
     elsif SUPPORT_KIWI && test_case =~ /(.+_)+(Should.+)(_.+)*/
