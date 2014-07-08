@@ -75,7 +75,15 @@ class ReportParser
         when /Test Suite '(\S+)'.*finished at\s+(.*)./
           t = Time.parse($2.to_s)
           handle_end_test_suite($1,t)     
-
+        
+        when /Test Suite '(\S+)'.*passed at\s+(.*)./
+          t = Time.parse($2.to_s)
+          handle_end_test_suite($1,t) 
+        
+        when /Test Suite '(\S+)'.*failed at\s+(.*)./
+          t = Time.parse($2.to_s)
+          handle_end_test_suite($1,t) 
+        
         when /Test Case '-\[\S+\s+(\S+)\]' started./
           test_case = $1
           @last_description = nil
