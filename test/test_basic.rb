@@ -38,11 +38,15 @@ class BasicTests < Test::Unit::TestCase
     assert !report.elements.empty?,
            "The TEST-TestProjectTests.xml test report shouldn't be empty"
 
-    assert report.root.elements.size,
+    assert report.root.elements.size == 2,
            "The TEST-TestProjectTests.xml report should have two <testcase/> elements"
 
-    assert report.root.elements['//failure'],
+    assert report.root.elements['//failure'].size == 1,
            "The TEST-TestProjectTests.xml report should have one <failure/> element"
+
+    assert_equal 'It&quot;s easy to write failing tests',
+           report.root.elements['//failure'].attribute('message').to_s,
+           "The TEST-TestProjectTests.xml report should include the first failure message"
   end
 
   module Helper
