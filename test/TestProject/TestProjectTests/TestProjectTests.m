@@ -13,6 +13,7 @@
 - (void)testFail
 {
     STFail(@"It's easy to write failing tests");
+    STFail(@"Some tests have multiple failures");
 }
 
 @end

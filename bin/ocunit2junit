@@ -166,8 +166,10 @@ class ReportParser
   end
 
   def handle_test_error(test_suite,test_case,error_message,error_location)
-#    error_message.tr!('<','').tr!('>','')
-    @errors[test_case] = [ error_message, error_location ]
+    # Only record the first error for a test_case
+    if @errors[test_case].nil?
+      @errors[test_case] = [ error_message, error_location ]
+    end
   end
 
   def handle_test_failed(test_case,test_case_duration) 
