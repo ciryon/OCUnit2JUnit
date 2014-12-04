@@ -88,6 +88,11 @@ class ReportParser
           test_case = $1
           @last_description = nil
 
+        when /Test Case '-\[\S+\s+(\S+)\]' measured [Time, seconds] average: (.*),/
+          test_case = get_test_case_name($1, @last_description)
+          test_case_duration = $2.to_f
+          handle_test_passed(test_case,test_case_duration)
+
         when /Test Case '-\[\S+\s+(\S+)\]' passed \((.*) seconds\)/
           test_case = get_test_case_name($1, @last_description)
           test_case_duration = $2.to_f
@@ -170,7 +175,9 @@ class ReportParser
   
   def handle_test_passed(test_case,test_case_duration)
     @total_passed_test_cases += 1
-    @tests_results[test_case] = test_case_duration
+    if !@tests_results.has_key?(test_case)
+      @tests_results[test_case] = test_case_duration
+    end 
   end
 
   def handle_test_error(test_suite,test_case,error_message,error_location)
