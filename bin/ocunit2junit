@@ -174,8 +174,8 @@ class ReportParser
   end
   
   def handle_test_passed(test_case,test_case_duration)
-    @total_passed_test_cases += 1
     if !@tests_results.has_key?(test_case)
+      @total_passed_test_cases += 1
       @tests_results[test_case] = test_case_duration
     end 
   end
