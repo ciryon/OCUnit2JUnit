@@ -88,7 +88,7 @@ class ReportParser
           test_case = $1
           @last_description = nil
 
-        when /Test Case '-\[\S+\s+(\S+)\]' measured [Time, seconds] average: (.*),/
+        when /Test Case '-\[\S+\s+(\S+)\]' measured \[Time, seconds\] average: (.*),/
           test_case = get_test_case_name($1, @last_description)
           test_case_duration = $2.to_f
           handle_test_passed(test_case,test_case_duration)
