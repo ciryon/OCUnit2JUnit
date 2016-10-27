@@ -86,6 +86,7 @@ class ReportParser
         
         when /Test Case '-\[\S+\s+(\S+)\]' started./
           test_case = $1
+          @current_test_case = $1
           @last_description = nil
 
         when /Test Case '-\[\S+\s+(\S+)\]' passed \((.*) seconds\)/
@@ -97,9 +98,18 @@ class ReportParser
           error_location = $1
           test_suite = $2
           error_message = $4
-	        test_case = get_test_case_name($3, description)
-	        handle_test_error(test_suite,test_case,error_message,error_location)
-	        
+          test_case = get_test_case_name($3, description)
+          handle_test_error(test_suite,test_case,error_message,error_location)
+
+        when /Assertion Failure: (.*):(.*): (.*)/
+          error_location = $1
+          test_suite = $1
+
+          test_case = @current_test_case
+
+          error_message = $3
+          handle_test_error(test_suite,test_case,error_message,error_location)
+
         when /Test Case '-\[\S+ (\S+)\]' failed \((\S+) seconds\)/
           test_case = get_test_case_name($1, @last_description)
           test_case_duration = $2.to_f
@@ -126,6 +136,7 @@ class ReportParser
     @errors = Hash.new  # test_case -> error_msg
     @ended_current_test_suite = false
     @cur_start_time = start_time
+    @current_test_case = "none"
   end
 
   def handle_end_test_suite(test_name,end_time)
