@@ -71,6 +71,7 @@ class ReportParser
           t = Time.parse($2.to_s)
           handle_start_test_suite(t)
           @last_description = nil
+          @current_suite = $1
 
         when /Test Suite '(\S+)'.*finished at\s+(.*)./
           t = Time.parse($2.to_s)
@@ -87,11 +88,23 @@ class ReportParser
         when /Test Case '-\[\S+\s+(\S+)\]' started./
           test_case = $1
           @last_description = nil
+          @current_test = test_case
 
         when /Test Case '-\[\S+\s+(\S+)\]' passed \((.*) seconds\)/
           test_case = get_test_case_name($1, @last_description)
           test_case_duration = $2.to_f
           handle_test_passed(test_case,test_case_duration)
+
+        when /Restarting after unexpected exit or crash in (\S+)\//
+         error_message = "Crash encountered during the test!"
+         test_case = @current_test
+         test_suite = @current_suite
+         handle_test_error(test_suite,test_case,error_message, "Search the logs for error location!")
+         #no way to know the time elapsed in this case as XCUnit does not print it in the informational message.
+         handle_test_failed(test_case, 0.000)
+
+          #mark current suite as restarting.
+          @restarting_current_suite = true
 
         when /(.*): error: -\[(\S+) (\S+)\] : (.*)/
           error_location = $1
@@ -120,6 +133,11 @@ class ReportParser
   end
   
   def handle_start_test_suite(start_time)
+
+    #if we detected that XCUinit says it is being restarted because of an unexpected interruption. (i.e. a crash)
+    #In this case, we don't want to treat it as a "newly" encountered suite.
+    return if @restarting_current_suite
+
     @total_failed_test_cases = 0
     @total_passed_test_cases = 0
     @tests_results = Hash.new # test_case -> duration
@@ -161,6 +179,7 @@ class ReportParser
       current_file << "</testsuite>\n"
       current_file.close
       @ended_current_test_suite = true
+      @restarting_current_suite = false
     end
   end
 
