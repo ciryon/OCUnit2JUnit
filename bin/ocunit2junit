@@ -189,7 +189,7 @@ class ReportParser
     end
   end
 
-  def handle_test_failed(test_case,test_case_duration)
+  def handle_test_failed(test_case,test_case_duration) 
     @total_failed_test_cases +=1
     @tests_results[test_case] = test_case_duration
   end
