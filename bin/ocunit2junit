@@ -44,7 +44,7 @@ class ReportParser
   end
 
   private
-
+  
   def parse_input
     if @piped_input.respond_to?(:each)
         line_enumerator = @piped_input.each
@@ -59,14 +59,14 @@ class ReportParser
         piped_row.encode!('UTF-8', temporary_encoding)
       end
       puts piped_row
-
+      
       description_results = piped_row.scan(/\s\'(.+)\'\s/)
       if description_results && description_results[0] && description_results[0]
         description = description_results[0][0]
       end
-
+      
       case piped_row
-
+        
         when /Test Suite '(\S+)'.*started at\s+(.*)/
           t = Time.parse($2.to_s)
           handle_start_test_suite(t)
@@ -75,8 +75,8 @@ class ReportParser
 
         when /Test Suite '(\S+)'.*finished at\s+(.*)./
           t = Time.parse($2.to_s)
-          handle_end_test_suite($1,t)
-
+          handle_end_test_suite($1,t)  
+          
         when /Test Suite '(\S+)'.*passed at\s+(.*)./
           t = Time.parse($2.to_s)
           handle_end_test_suite($1,t)
