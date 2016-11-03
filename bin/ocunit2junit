@@ -2,7 +2,7 @@
 #
 # ocunit2junit.rb was written by Christian Hedin <christian.hedin@jayway.com>
 # Version: 0.1 - 30/01 2010
-# Usage:
+# Usage: 
 # xcodebuild -yoursettings | ocunit2junit.rb
 # All output is just passed through to stdout so you don't miss a thing!
 # JUnit style XML-report are put in the folder specified below.
@@ -33,11 +33,11 @@ require 'socket'
 class ReportParser
 
   attr_reader :exit_code
-
+  
   def initialize(piped_input)
     @piped_input = piped_input
     @exit_code = 0
-
+    
     FileUtils.rm_rf(TEST_REPORTS_FOLDER)
     FileUtils.mkdir_p(TEST_REPORTS_FOLDER)
     parse_input
