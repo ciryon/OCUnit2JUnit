@@ -176,7 +176,7 @@ class ReportParser
   def string_to_xml(s)
     s.gsub(/&/, '&amp;').gsub(/'/, '&quot;').gsub(/</, '&lt;')
   end
-
+  
   def handle_test_passed(test_case,test_case_duration)
     @total_passed_test_cases += 1
     @tests_results[test_case] = test_case_duration
@@ -211,7 +211,7 @@ class ReportParser
       test_case
     end
   end
-
+ 
 end
 
 #Main
