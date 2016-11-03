@@ -113,10 +113,10 @@ class ReportParser
           test_case = get_test_case_name($1, @last_description)
           test_case_duration = $2.to_f
           handle_test_failed(test_case,test_case_duration)
-        
+          
         when /failed with exit code (\d+)/
           @exit_code = $1.to_i
-        
+          
         when
           /BUILD FAILED/
           @exit_code = -1;
@@ -127,7 +127,7 @@ class ReportParser
       end
     end
   end
-
+  
   def handle_start_test_suite(start_time)
     @total_failed_test_cases = 0
     @total_passed_test_cases = 0
