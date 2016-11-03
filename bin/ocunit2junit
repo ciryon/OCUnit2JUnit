@@ -71,6 +71,7 @@ class ReportParser
           t = Time.parse($2.to_s)
           handle_start_test_suite(t)
           @last_description = nil
+          @last_test_suite = $1
 
         when /Test Suite '(\S+)'.*finished at\s+(.*)./
           t = Time.parse($2.to_s)
@@ -87,6 +88,7 @@ class ReportParser
         when /Test Case '-\[\S+\s+(\S+)\]' started./
           test_case = $1
           @last_description = nil
+          @last_test_case = test_case
 
         when /Test Case '-\[\S+\s+(\S+)\]' passed \((.*) seconds\)/
           test_case = get_test_case_name($1, @last_description)
@@ -99,7 +101,14 @@ class ReportParser
           error_message = $4
 	        test_case = get_test_case_name($3, description)
 	        handle_test_error(test_suite,test_case,error_message,error_location)
-	        
+
+        when /.*Assertion Failure: (.*?.*?): (.*)/
+          error_location = $1
+          error_message = $2
+          test_suite = @last_test_suite
+	        test_case = @last_test_case
+	        handle_test_error(test_suite,test_case,error_message,error_location)
+
         when /Test Case '-\[\S+ (\S+)\]' failed \((\S+) seconds\)/
           test_case = get_test_case_name($1, @last_description)
           test_case_duration = $2.to_f
