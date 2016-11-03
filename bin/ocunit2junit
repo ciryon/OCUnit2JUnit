@@ -113,7 +113,7 @@ class ReportParser
           test_case = get_test_case_name($1, @last_description)
           test_case_duration = $2.to_f
           handle_test_failed(test_case,test_case_duration)
-        
+            
         when /failed with exit code (\d+)/
           @exit_code = $1.to_i
           
