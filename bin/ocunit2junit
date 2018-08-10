@@ -36,6 +36,8 @@ class ReportParser
   
   def initialize(piped_input)
     @piped_input = piped_input
+    @sysout = nil
+    @record_sysout = false
     @exit_code = 0
     
     FileUtils.rm_rf(TEST_REPORTS_FOLDER)
@@ -72,6 +74,7 @@ class ReportParser
           handle_start_test_suite(t)
           @last_description = nil
           @current_suite = $1
+          @record_sysout = true
 
         when /Test Suite '(\S+)'.*finished at\s+(.*)./
           t = Time.parse($2.to_s)
@@ -134,6 +137,15 @@ class ReportParser
         when
           /BUILD FAILED/
           @exit_code = -1;
+        
+        else
+          if @record_sysout
+            if @sysout.nil?
+              @sysout = piped_row;
+            else
+              @sysout << piped_row;
+            end
+          end
       end
       
       if description
@@ -151,6 +163,7 @@ class ReportParser
     @total_failed_test_cases = 0
     @total_passed_test_cases = 0
     @tests_results = Hash.new # test_case -> duration
+    @sysouts = Hash.new # test_case -> sysout
     @errors = Hash.new  # test_case -> error_msg
     @ended_current_test_suite = false
     @cur_start_time = start_time
@@ -170,7 +183,11 @@ class ReportParser
       @tests_results.each do |t|
         test_case = string_to_xml t[0]
         duration = @tests_results[test_case]
-        current_file << "<testcase classname='#{test_name}' name='#{test_case}' time='#{duration.to_s}'"
+        current_file << "<testcase classname='#{test_name}' name='#{test_case}' time='#{duration.to_s}'>\n"
+        unless @sysouts[test_case].nil?
+          sysout = string_to_xml @sysouts[test_case].to_s
+          current_file << "<system-out>#{sysout}</system-out>\n"
+        end
         unless @errors[test_case].nil?
           # uh oh we got a failure
           puts "tests_errors[0]"
@@ -180,12 +197,9 @@ class ReportParser
           
           message = string_to_xml @errors[test_case][0].to_s
           location = string_to_xml @errors[test_case][1].to_s
-          current_file << ">\n"
           current_file << "<failure message='#{message}' type='Failure'>#{location}</failure>\n"
-          current_file << "</testcase>\n"
-        else
-          current_file << " />\n"
         end
+        current_file << "</testcase>\n"
       end
       current_file << "</testsuite>\n"
       current_file.close
@@ -201,6 +215,14 @@ class ReportParser
   def handle_test_passed(test_case,test_case_duration)
     @total_passed_test_cases += 1
     @tests_results[test_case] = test_case_duration
+    unless @sysout.nil?
+      if @sysouts[test_case].nil?
+        @sysouts[test_case] = @sysout
+      else
+        @sysouts[test_case] << @sysout
+      end
+      @sysout = nil
+    end
   end
 
   def handle_test_error(test_suite,test_case,error_message,error_location)
@@ -208,11 +230,27 @@ class ReportParser
     if @errors[test_case].nil?
       @errors[test_case] = [ error_message, error_location ]
     end
+    unless @sysout.nil?
+      if @sysouts[test_case].nil?
+        @sysouts[test_case] = @sysout
+      else
+        @sysouts[test_case] << @sysout
+      end
+      @sysout = nil
+    end
   end
 
   def handle_test_failed(test_case,test_case_duration) 
     @total_failed_test_cases +=1
     @tests_results[test_case] = test_case_duration
+    unless @sysout.nil?
+      if @sysouts[test_case].nil?
+        @sysouts[test_case] = @sysout
+      else
+        @sysouts[test_case] << @sysout
+      end
+      @sysout = nil
+    end
   end
 
   def get_test_case_name(test_case, description)
