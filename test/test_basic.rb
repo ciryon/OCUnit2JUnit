@@ -44,7 +44,7 @@ class BasicTests < Test::Unit::TestCase
     assert report.root.elements['//failure'].size == 1,
            "The TEST-TestProjectTests.xml report should have one <failure/> element"
 
-    assert_equal 'It&quot;s easy to write failing tests',
+    assert_equal 'failed - It&quot;s easy to write failing tests',
            report.root.elements['//failure'].attribute('message').to_s,
            "The TEST-TestProjectTests.xml report should include the first failure message"
   end
