@@ -38,15 +38,31 @@ class BasicTests < Test::Unit::TestCase
     assert !report.elements.empty?,
            "The TEST-TestProjectTests.xml test report shouldn't be empty"
 
-    assert report.root.elements.size == 2,
-           "The TEST-TestProjectTests.xml report should have two <testcase/> elements"
+    assert report.root.elements.size == 4,
+           "The TEST-TestProjectTests.xml report should have four <testcase/> elements"
 
-    assert report.root.elements['//failure'].size == 1,
+    assert report.root.elements['testcase[1]/failure'].size == 1,
            "The TEST-TestProjectTests.xml report should have one <failure/> element"
 
     assert_equal 'failed - It&quot;s easy to write failing tests',
-           report.root.elements['//failure'].attribute('message').to_s,
+           report.root.elements['testcase[1]/failure'].attribute('message').to_s,
            "The TEST-TestProjectTests.xml report should include the first failure message"
+
+    # with sysout
+    assert report.root.elements['testcase[2]/failure'].size == 1,
+           "The TEST-TestProjectTests.xml report should have one <failure/> element"
+
+    assert report.root.elements['testcase[2]/system-out'].size == 1,
+           "The TEST-TestProjectTests.xml report should have one <system-out/> element"
+
+    assert report.root.elements['testcase[2]/system-out'].text.include?('Output sysout with fail'),
+           "The TEST-TestProjectTests.xml report should include the sysout message"
+
+    assert report.root.elements['testcase[4]/system-out'].size == 1,
+           "The TEST-TestProjectTests.xml report should have one <system-out/> element"
+
+    assert report.root.elements['testcase[4]/system-out'].text.include?('Output sysout with success'),
+           "The TEST-TestProjectTests.xml report should include the sysout message"
   end
 
   module Helper

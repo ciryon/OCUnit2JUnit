@@ -16,4 +16,15 @@
     XCTFail(@"Some tests have multiple failures");
 }
 
+- (void)testFailSysout
+{
+    NSLog(@"Output sysout with fail");
+    XCTFail(@"It's failing test with sysout");
+}
+
+- (void)testSuccessSysout
+{
+    NSLog(@"Output sysout with success");
+}
+
 @end
