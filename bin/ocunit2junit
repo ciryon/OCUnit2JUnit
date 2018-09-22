@@ -186,7 +186,7 @@ class ReportParser
         current_file << "<testcase classname='#{test_name}' name='#{test_case}' time='#{duration.to_s}'>\n"
         unless @sysouts[test_case].nil?
           sysout = string_to_xml @sysouts[test_case].to_s
-          current_file << "<system-out>#{sysout}</system-out>\n"
+          current_file << "<system-out><![CDATA[#{sysout}]]></system-out>\n"
         end
         unless @errors[test_case].nil?
           # uh oh we got a failure
