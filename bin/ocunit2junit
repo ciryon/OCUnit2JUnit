@@ -88,6 +88,9 @@ class ReportParser
           t = Time.parse($2.to_s)
           handle_end_test_suite($1,t) 
         
+        when /	 Executed \d+ tests?, with \d+ failures? \(\d+ unexpected\) in [\d\.]+ \([\d\.]+\) seconds?/
+          # do nothing.
+        
         when /Test Case '-\[\S+\s+(\S+)\]' started./
           test_case = $1
           @current_test_case = $1
