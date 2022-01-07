@@ -1,4 +1,6 @@
-[![Build Status](https://travis-ci.org/ciryon/OCUnit2JUnit.png)](https://travis-ci.org/ciryon/OCUnit2JUnit)
+# ABANDONWARE!
+
+This script is no longer maintained! Have a look at one of the many forks or look for alternatives. Thanks for all the fish! 🐟
 
 Introduction
 ======================
